@@ -25,11 +25,11 @@ namespace Os {
 
     Mutex::~Mutex(void) {
         UINT status = tx_mutex_delete(reinterpret_cast<TX_MUTEX*>(this->m_handle));
-        FW_ASSERT(status == TX_SUCCESS);
+        // TODO: if ret != TX_SUCCESS log a memory leak
 
         // Release auxiliary handle allocated memory
         status = tx_byte_release((VOID *)this->m_handle);
-        FW_ASSERT(status == TX_SUCCESS);
+        // TODO: if ret != TX_SUCCESS log a memory leak
     }
 
     void Mutex::lock(void) {

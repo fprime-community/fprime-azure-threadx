@@ -3,7 +3,8 @@
 #include <Os/File.hpp>
 #include <Fw/Types/Assert.hpp>
 
-#include "app_filex.h"
+#include <fx_api.h>
+#include "app_azure_rtos.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,15 +28,62 @@ extern "C" {
 //#define DEBUG_PRINT(x,...) printf(x,##__VA_ARGS__); fflush(stdout)
 #define DEBUG_PRINT(x,...)
 
+// Type used to piggyback on class member "m_fd" all required data to
+// operate a File object without the need to add extra members in File.hpp
+typedef struct fileHandleDataTag
+{
+    FX_FILE m_fd;      // Stored file descriptor
+    FX_MEDIA* m_media; // Media reference used by the FS
+} fileHandleData_t;
+
+
 namespace Os {
 
-    File::File() :m_fd(),m_mode(OPEN_NO_MODE),m_lastError(0) {
-         file_sys_media_get(&this->m_media);
+    // Processes operations with O_WRONLY flags set
+    UINT process_open_write_request(FX_MEDIA* media, FX_FILE* file, char* fileName, File::Mode mode, bool include_excl = false);
+
+    // Verify if a file is opened
+    bool is_file_open(FX_FILE* fd);
+
+    File::File() :m_fd(0),m_mode(OPEN_NO_MODE),m_lastError(0)
+    {
+#ifdef __SIZEOF_POINTER__
+        FW_ASSERT( !(sizeof(this->m_fd) < __SIZEOF_POINTER__) );
+#else
+  #error Unable to verify a pointer size!
+#endif
+
+        // ThreadX memory pool pointer
+        TX_BYTE_POOL* bytePoolPtr;
+
+        if(app_tx_get_byte_pool(&bytePoolPtr) == TX_SUCCESS)
+        {
+            // Allocate the memory for auxiliary watchdog data handling structure
+            if (tx_byte_allocate(bytePoolPtr, (VOID **)&this->m_fd, sizeof(fileHandleData_t), TX_NO_WAIT) == TX_SUCCESS)
+            {
+                file_sys_media_get(&reinterpret_cast<fileHandleData_t*>(this->m_fd)->m_media);
+                // TODO: Currently only one media is available. Need to be able to open any media.
+            }
+            else
+            {
+                reinterpret_cast<fileHandleData_t*>(this->m_fd)->m_media = nullptr;
+                this->m_fd = 0;
+
+                // TODO: Log memory allocation error
+            }
+        }
     }
 
     File::~File() {
         if (this->m_mode != OPEN_NO_MODE) {
             this->close();
+        }
+        // If file auxiliary structure exists, delete it
+        if (this->m_fd)
+        {
+            // Release auxiliary handle allocated memory
+            UINT ret = tx_byte_release((VOID *)this->m_fd);
+            // TODO: if ret != TX_SUCCESS log a memory leak
         }
     }
 
@@ -50,76 +98,86 @@ namespace Os {
         UINT opStatus = FX_SUCCESS;
 
         CHAR* file = static_cast<char*>(const_cast<char*>(fileName));
+        FX_FILE* fd     = reinterpret_cast<FX_FILE*>(this->m_fd);
+        FX_MEDIA* media = reinterpret_cast<fileHandleData_t*>(this->m_fd)->m_media;
 
-        switch (mode) {
-            case OPEN_READ:
-                // flags = O_RDONLY;
-                opStatus = fx_file_open(this->m_media, &this->m_fd, file, FX_OPEN_FOR_READ);
-                break;
-            case OPEN_WRITE:
-                // flags = O_WRONLY | O_CREAT;
-                opStatus = process_open_write_request(this->m_media, file, OPEN_WRITE);
-                break;
-            case OPEN_SYNC_WRITE:
-            case OPEN_SYNC_DIRECT_WRITE:
-                // Not implemented on ThreadX
-                stat = OTHER_ERROR;
-                break;
-            case OPEN_CREATE:
-                // flags = O_WRONLY | O_CREAT | O_TRUNC;
-                opStatus = process_open_write_request(this->m_media, file, OPEN_CREATE, include_excl);
-                break;
-            case OPEN_APPEND:
-                // flags = O_WRONLY | O_CREAT | O_APPEND;
-                opStatus = process_open_write_request(this->m_media, file, OPEN_APPEND);
-                break;
-            default:
-                FW_ASSERT(0,(NATIVE_INT_TYPE)mode);
-                break;
-        }
-
-        if (FX_SUCCESS != opStatus)
+        if ((media == nullptr) || (fd == 0))
         {
-            this->m_lastError = opStatus;
-            switch (opStatus)
-            {
-                case FX_NO_MORE_SPACE:
-                    stat = NO_SPACE;
+        	stat = OTHER_ERROR;
+        }
+        else
+        {
+            switch (mode) {
+                case OPEN_READ:
+                    // flags = O_RDONLY;
+                    opStatus = fx_file_open(media, fd, file, FX_OPEN_FOR_READ);
                     break;
-                case FX_NOT_FOUND:
-                    stat = DOESNT_EXIST;
+                case OPEN_WRITE:
+                    // flags = O_WRONLY | O_CREAT;
+                    opStatus = process_open_write_request(media, fd, file, OPEN_WRITE);
                     break;
-                case FX_WRITE_PROTECT:
-                case FX_ACCESS_ERROR:
-                    stat = NO_PERMISSION;
-                    break;
-                case FX_ALREADY_CREATED:
-                    stat = FILE_EXISTS;
-                    break;
-                case FX_MEDIA_NOT_OPEN:
-                case FX_NOT_A_FILE:
-                case FX_FILE_CORRUPT:
-                case FX_FAT_READ_ERROR:
-                case FX_PTR_ERROR:
-                case FX_CALLER_ERROR:
-                case FX_SECTOR_INVALID:
-                case FX_NO_MORE_ENTRIES:
-                case FX_IO_ERROR:
-                case FX_INVALID_PATH:
-                case FX_INVALID_NAME:
-                case FX_MEDIA_INVALID:
-                case FX_NOT_OPEN:
+                case OPEN_SYNC_WRITE:
+                case OPEN_SYNC_DIRECT_WRITE:
+                    // Not implemented on ThreadX
                     stat = OTHER_ERROR;
+                    break;
+                case OPEN_CREATE:
+                    // flags = O_WRONLY | O_CREAT | O_TRUNC;
+                    opStatus = process_open_write_request(media, fd, file, OPEN_CREATE, include_excl);
+                    break;
+                case OPEN_APPEND:
+                    // flags = O_WRONLY | O_CREAT | O_APPEND;
+                    opStatus = process_open_write_request(media, fd, file, OPEN_APPEND);
                     break;
                 default:
-                    stat = OTHER_ERROR;
+                    FW_ASSERT(0,(NATIVE_INT_TYPE)mode);
                     break;
             }
 
-            DEBUG_PRINT("Error 0x%.2x during file \"%s\" open\n", opStatus, fileName);
+            if (FX_SUCCESS != opStatus)
+            {
+                this->m_lastError = opStatus;
+                switch (opStatus)
+                {
+                    case FX_NO_MORE_SPACE:
+                        stat = NO_SPACE;
+                        break;
+                    case FX_NOT_FOUND:
+                        stat = DOESNT_EXIST;
+                        break;
+                    case FX_WRITE_PROTECT:
+                    case FX_ACCESS_ERROR:
+                        stat = NO_PERMISSION;
+                        break;
+                    case FX_ALREADY_CREATED:
+                        stat = FILE_EXISTS;
+                        break;
+                    case FX_MEDIA_NOT_OPEN:
+                    case FX_NOT_A_FILE:
+                    case FX_FILE_CORRUPT:
+                    case FX_FAT_READ_ERROR:
+                    case FX_PTR_ERROR:
+                    case FX_CALLER_ERROR:
+                    case FX_SECTOR_INVALID:
+                    case FX_NO_MORE_ENTRIES:
+                    case FX_IO_ERROR:
+                    case FX_INVALID_PATH:
+                    case FX_INVALID_NAME:
+                    case FX_MEDIA_INVALID:
+                    case FX_NOT_OPEN:
+                        stat = OTHER_ERROR;
+                        break;
+                    default:
+                        stat = OTHER_ERROR;
+                        break;
+                }
+
+                DEBUG_PRINT("Error 0x%.2x during file \"%s\" open\n", opStatus, fileName);
+            }
+
+            this->m_mode = mode;
         }
 
-        this->m_mode = mode;
         return stat;
     }
 
@@ -129,7 +187,7 @@ namespace Os {
         ULONG actualBytes;
 
         // Check if file is already opened using a 0 bytes read operation
-        return ((FX_NOT_OPEN == fx_file_read(&this->m_fd, buffer, 0, &actualBytes)) ? false : true);
+        return ((FX_NOT_OPEN == fx_file_read(reinterpret_cast<FX_FILE*>(this->m_fd), buffer, 0, &actualBytes)) ? false : true);
     }
 
     File::Status File::prealloc(NATIVE_INT_TYPE offset, NATIVE_INT_TYPE len) {
@@ -158,7 +216,7 @@ namespace Os {
 
         NATIVE_INT_TYPE whence = absolute?FX_SEEK_BEGIN:FX_SEEK_FORWARD;
 
-        UINT opStatus = fx_file_relative_seek(&this->m_fd,offset,whence);
+        UINT opStatus = fx_file_relative_seek(reinterpret_cast<FX_FILE*>(this->m_fd),offset,whence);
 
         // No error would be a normal one for this simple
         // class, so return other error
@@ -213,7 +271,7 @@ namespace Os {
 
             ULONG readSize;
 
-            UINT status = fx_file_read(&this->m_fd, static_cast<UCHAR*>(buffer), (ULONG)size-accSize, &readSize);
+            UINT status = fx_file_read(reinterpret_cast<FX_FILE*>(this->m_fd), static_cast<UCHAR*>(buffer), (ULONG)size-accSize, &readSize);
 
             if (readSize != (ULONG)(size)-accSize) {
                 // could be an error || end of file
@@ -290,7 +348,7 @@ namespace Os {
 
         Status stat = OP_OK;
 
-        UINT status = fx_file_write(&this->m_fd, static_cast<VOID*>(const_cast<VOID*>(buffer)), (ULONG)size);
+        UINT status = fx_file_write(reinterpret_cast<FX_FILE*>(this->m_fd), static_cast<VOID*>(const_cast<VOID*>(buffer)), (ULONG)size);
 
         if (FX_SUCCESS != status)
         {
@@ -380,7 +438,7 @@ namespace Os {
         // This service flushes all cached sectors and directory entries of any
         // modified files to the physical media (ThreadX  does not support the flush
         // operation on a single file)
-        UINT status = fx_media_flush(this->m_media);
+        UINT status = fx_media_flush(reinterpret_cast<fileHandleData_t*>(this->m_fd)->m_media);
 
         if (FX_SUCCESS != status) {
             switch (status) {
@@ -406,10 +464,10 @@ namespace Os {
     void File::close(void) {
         if (this->m_mode != OPEN_NO_MODE)
         {
-            (void)::fx_file_close(&this->m_fd);
+            (void)::fx_file_close(reinterpret_cast<FX_FILE*>(this->m_fd));
         }
         this->m_mode = OPEN_NO_MODE;
-        memset (&this->m_fd,0,sizeof(FX_FILE));
+        memset (reinterpret_cast<FX_FILE*>(this->m_fd),0,sizeof(FX_FILE));
     }
 
     NATIVE_INT_TYPE File::getLastError(void) {
@@ -485,7 +543,7 @@ namespace Os {
         }
     }
 
-    UINT File::process_open_write_request(FX_MEDIA* media, char* fileName, File::Mode mode, bool include_excl)
+    UINT process_open_write_request(FX_MEDIA* media, FX_FILE* file, char* fileName, File::Mode mode, bool include_excl)
     {
         UINT opStatus = FX_SUCCESS;
         UINT fileAttributes;
@@ -509,7 +567,7 @@ namespace Os {
             }
 
             // TODO: CHECK if file is already open (if possible) and when open with data, if the file pointer is moved
-            if (Os::File::isOpen())
+            if (is_file_open(file))
             {
                 opStatus = FX_ACCESS_ERROR;
             }
@@ -525,26 +583,26 @@ namespace Os {
         // On success open file on write mode
         if (FX_SUCCESS == opStatus)
         {
-            opStatus = fx_file_open(media, &this->m_fd, fileName, FX_OPEN_FOR_WRITE);
+            opStatus = fx_file_open(media, file, fileName, FX_OPEN_FOR_WRITE);
 
             // Perform mode specific operations
             if (FX_SUCCESS == opStatus)
             {
                 switch (mode)
                 {
-                    case OPEN_WRITE:
+                    case File::Mode::OPEN_WRITE:
                         // Nothing else is required to be done
                         break;
-                    case OPEN_CREATE:
+                    case File::Mode::OPEN_CREATE:
                         // flags |= O_TRUNC
                         // Truncates the file to size 0 and releases its cluster(s)
-                        opStatus = fx_file_truncate_release(&this->m_fd, 0);
+                        opStatus = fx_file_truncate_release(file, 0);
                         break;
-                    case OPEN_APPEND:
+                    case File::Mode::OPEN_APPEND:
                         // flags |= O_APPEND
                         // Positions the internal file write pointer to a 0 byte relative offset from
                         // the end of the file
-                        opStatus = fx_file_relative_seek(&this->m_fd, 0, FX_SEEK_END);
+                        opStatus = fx_file_relative_seek(file, 0, FX_SEEK_END);
                         break;
                     default:
                         FW_ASSERT(0,(NATIVE_INT_TYPE)mode);
@@ -554,5 +612,14 @@ namespace Os {
         }
 
         return opStatus;
+    }
+
+    bool is_file_open(FX_FILE* fd)
+    {
+        UCHAR buffer[sizeof(ULONG)];
+        ULONG actualBytes;
+
+        // Check if file is already opened using a 0 bytes read operation
+        return ((FX_NOT_OPEN == fx_file_read(fd, buffer, 0, &actualBytes)) ? false : true);
     }
 }

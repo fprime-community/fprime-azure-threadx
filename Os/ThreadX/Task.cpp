@@ -110,13 +110,15 @@ namespace Os {
         }
         
         // Delete the thread object from ThreadX
-        tx_thread_delete(reinterpret_cast<TX_THREAD*>(this->m_handle));
+        (void)tx_thread_delete(reinterpret_cast<TX_THREAD*>(this->m_handle));
 
         // Release task's stack allocated memory
-        (void)tx_byte_release((VOID *)reinterpret_cast<taskHandleData_t*>(this->m_handle)->stackStart);
+        UINT ret = tx_byte_release((VOID *)reinterpret_cast<taskHandleData_t*>(this->m_handle)->stackStart);
+        // TODO: if ret != TX_SUCCESS log a memory leak
 
         // Release auxiliary handle allocated memory
-        (void)tx_byte_release((VOID *)this->m_handle);
+        ret = tx_byte_release((VOID *)this->m_handle);
+        // TODO: if ret != TX_SUCCESS log a memory leak
 
     }
     

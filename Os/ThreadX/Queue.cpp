@@ -13,8 +13,8 @@ typedef struct queueHandleDataTag
 {
     TX_QUEUE handle;           // handle for implementation specific queue on Azure ThreadX
     ULONG* queueStart;         // pointer to the queue storage area
-    NATIVE_INT_TYPE m_msgSize; // message size (maximum message size queue can hold)
-    NATIVE_INT_TYPE m_depth;   // queue depth (maximum number of messages queue can hold)
+    NATIVE_INT_TYPE msgSize;   // message size (maximum message size queue can hold)
+    NATIVE_INT_TYPE depth;     // queue depth (maximum number of messages queue can hold)
     NATIVE_UINT_TYPE count;    // Current number of messages on the queue
     NATIVE_UINT_TYPE maxCount; // Maximum number of messages ever seen on the queue
 } queueHandleData_t;
@@ -122,8 +122,8 @@ namespace Os {
         switch (ret)
         {
             case TX_SUCCESS:
-                reinterpret_cast<queueHandleData_t*>(this->m_handle)->m_depth   = depth;
-                reinterpret_cast<queueHandleData_t*>(this->m_handle)->m_msgSize = msgSize;
+                reinterpret_cast<queueHandleData_t*>(this->m_handle)->depth   = depth;
+                reinterpret_cast<queueHandleData_t*>(this->m_handle)->msgSize = msgSize;
                 reinterpret_cast<queueHandleData_t*>(this->m_handle)->count    = 0;
                 reinterpret_cast<queueHandleData_t*>(this->m_handle)->maxCount = 0;
                 Queue::s_numQueues++;
@@ -149,10 +149,12 @@ namespace Os {
         (void)tx_queue_delete(reinterpret_cast<TX_QUEUE*>(this->m_handle));
 
         // Release queue's allocated pool memory
-        (void)tx_byte_release((VOID *)reinterpret_cast<queueHandleData_t*>(this->m_handle)->queueStart);
+        UINT ret = tx_byte_release((VOID *)reinterpret_cast<queueHandleData_t*>(this->m_handle)->queueStart);
+        // TODO: if ret != TX_SUCCESS log a memory leak
 
         // Release auxiliary handle allocated memory
-        (void)tx_byte_release((VOID *)this->m_handle);
+        ret = tx_byte_release((VOID *)this->m_handle);
+        // TODO: if ret != TX_SUCCESS log a memory leak
     }
 
     Queue::QueueStatus Queue::send(const U8* buffer, NATIVE_INT_TYPE size, NATIVE_INT_TYPE priority, QueueBlocking block) {
@@ -325,11 +327,11 @@ namespace Os {
     }
 
     NATIVE_INT_TYPE Queue::getQueueSize() const {
-        return reinterpret_cast<queueHandleData_t*>(this->m_handle)->m_depth;
+        return reinterpret_cast<queueHandleData_t*>(this->m_handle)->depth;
     }
 
     NATIVE_INT_TYPE Queue::getMsgSize() const {
-        return reinterpret_cast<queueHandleData_t*>(this->m_handle)->m_msgSize;
+        return reinterpret_cast<queueHandleData_t*>(this->m_handle)->msgSize;
     }
 
 }
