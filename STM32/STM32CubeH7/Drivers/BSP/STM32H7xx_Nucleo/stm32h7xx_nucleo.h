@@ -1,0 +1,1 @@
+../../../../../../STM32CubeH7/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h

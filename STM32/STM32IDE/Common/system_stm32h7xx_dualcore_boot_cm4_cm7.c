@@ -1,0 +1,1 @@
+../../../../STM32CubeH7/Drivers/CMSIS/Device/ST/STM32H7xx/Source/Templates/system_stm32h7xx_dualcore_boot_cm4_cm7.c

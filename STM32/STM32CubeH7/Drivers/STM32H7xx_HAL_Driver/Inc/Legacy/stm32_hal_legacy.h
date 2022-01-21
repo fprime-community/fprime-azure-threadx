@@ -1,0 +1,1 @@
+../../../../../../../STM32CubeH7/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
