@@ -6,11 +6,11 @@ set(CMAKE_CROSSCOMPILING 1)
 
 # Set the build environment variables
 set(DEVELOP_REPOS_BASE "/home/cmjl/projects/FPrime")
-set(FPRIME_FRAMEWORK_PATH "${DEVELOP_REPOS_BASE}/fprime")
 set(STM32_TOOLS_PATH "/opt/st/stm32cubeide_1.7.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.linux64_2.0.0.202105311346/tools")
 set(STM32CUBEH7_REPO_PATH "${DEVELOP_REPOS_BASE}/STM32CubeH7")
 set(STM32_LD_SCRIPTS_PATH "${DEVELOP_REPOS_BASE}/fprime-azure-threadx/STM32/STM32IDE/LinkerScripts")
-set(AZURE_LIBS_PATH "${DEVELOP_REPOS_BASE}/azure-libs/build/libs")
+set(AZURE_PATH "${DEVELOP_REPOS_BASE}/azure-libs")
+set(AZURE_LIBS_PATH "${AZURE_PATH}/build/libs")
 set(STM_COMPILER_ROOT "${STM32_TOOLS_PATH}")
 
 # Check toolchain directory exists

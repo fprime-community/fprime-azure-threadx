@@ -56,8 +56,8 @@ endif()
 ####
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")
     add_dependencies(Os fprime-nucleo_NucleoOs)
-    target_link_libraries(Os fprime-nucleo_NucleoOs)
-    target_link_libraries(fprime-nucleo_NucleoOs Os)
+    target_link_libraries(Os PRIVATE fprime-nucleo_NucleoOs)
+    target_link_libraries(fprime-nucleo_NucleoOs PRIVATE Os)
 endif()
 
 

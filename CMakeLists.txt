@@ -1,11 +1,10 @@
 ####
-# 'fprime-arduino' Deployment:
+# 'fprime-azure-threadx' Deployment:
 #
 # This sets up the build for the 'fprime-azure-threadx' library package, including the custom
 # components. In addition, it imports FPrime.cmake, which includes the core F 
 # Prime components.
 #
-# Author: cloureiro
 ####
 
 ##
@@ -22,4 +21,4 @@ set(BAREMETAL_SCHEDULER "OFF")
 # Include the two parts of the build system. Not needing to register separate targets
 include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime.cmake")
 include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/fprime-azure-threadx.cmake")
+

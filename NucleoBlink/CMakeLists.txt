@@ -22,7 +22,6 @@ set(BAREMETAL_SCHEDULER "OFF")
 # Include the two parts of the build system. Not needing to register separate targets
 include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime.cmake")
 include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/../fprime-azure-threadx.cmake")
 
 ##
 # Section 3: Components and Topology
