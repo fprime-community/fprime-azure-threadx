@@ -1,6 +1,6 @@
+#include <NucleoBlink/Top/Components.hpp>
 #include <fprime-nucleo/NucleoTypes/GenericLogAssert.hpp>
 #include <Os/Log.hpp>
-#include "../../NucleoBlink/Top/Components.hpp"
 #ifdef NUCLEO
     #include <fprime-nucleo/NucleoOs/StreamLog.hpp>
     #include <Arduino.h>

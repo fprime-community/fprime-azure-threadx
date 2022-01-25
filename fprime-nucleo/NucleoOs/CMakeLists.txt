@@ -8,10 +8,8 @@
 cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0079 NEW)
 
-get_directory_property(COMP_DEFS COMPILE_DEFINITIONS)
-
+# Basic module dependencies
 set(MOD_DEPS
-        "${CMAKE_THREAD_LIBS_INIT}"
         Fw/Cfg
         Fw/Types
         Fw/Logger
@@ -19,6 +17,10 @@ set(MOD_DEPS
         STM32/STM32CubeH7
         STM32/STM32IDE
         )
+####
+# Source Files:
+#
+####
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")
     set(SOURCE_FILES
         # Common implementations

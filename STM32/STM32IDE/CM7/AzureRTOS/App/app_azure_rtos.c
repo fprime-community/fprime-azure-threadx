@@ -55,23 +55,6 @@
 static UCHAR tx_byte_pool_buffer[TX_APP_MEM_POOL_SIZE] __attribute__ ((aligned (sizeof(ULONG))));
 static TX_BYTE_POOL tx_app_byte_pool;
 
-
-/* USER CODE BEGIN NX_Pool_Buffer */
-#if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = ".NetXPoolSection"
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
-__attribute__((section(".NetXPoolSection")))
-#elif defined ( __GNUC__ ) /* GNU Compiler */
-__attribute__((section(".NetXPoolSection")))
-#endif
-/* USER CODE END NX_Pool_Buffer */
-
-/* NOTE: ThreadX nx_byte_pool_buffer requires that the starting address must be
- * aligned to the ULONG data type */
-static UCHAR  nx_byte_pool_buffer[NX_APP_MEM_POOL_SIZE] __attribute__ ((aligned (sizeof(ULONG))));
-static TX_BYTE_POOL nx_app_byte_pool;
-
-
 static UCHAR  fx_byte_pool_buffer[FX_APP_MEM_POOL_SIZE]  __attribute__ ((aligned (sizeof(ULONG))));
 static TX_BYTE_POOL fx_app_byte_pool;
 #endif
@@ -94,7 +77,6 @@ VOID tx_application_define(VOID *first_unused_memory)
 #if (USE_MEMORY_POOL_ALLOCATION == 1)
   VOID *memory_ptr;
 
-#if defined(TX_CODE_TEST) || defined(UT_FPRIME)
   if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE) != TX_SUCCESS)
   {
     /* USER CODE BEGIN TX_Byte_Pool_Error */
@@ -107,14 +89,6 @@ VOID tx_application_define(VOID *first_unused_memory)
 
     /* USER CODE END TX_Byte_Pool_Success */
     memory_ptr = (VOID *)&tx_app_byte_pool;
-#ifdef TX_CODE_TEST
-    if (App_ThreadX_Init(memory_ptr) != TX_SUCCESS)
-    {
-          /* USER CODE BEGIN  App_ThreadX_Init_Error */
-
-          /* USER CODE END  App_ThreadX_Init_Error */
-    }
-#endif
       /* USER CODE BEGIN  App_ThreadX_Init_Success */
 
       /* USER CODE END  App_ThreadX_Init_Success */
@@ -133,34 +107,6 @@ VOID tx_application_define(VOID *first_unused_memory)
       /* USER CODE END  App_FPrime_Init_Success */
 
   }
-#endif // defined(TX_CODE_TEST) || defined(UT_FPRIME)
-
-#ifdef NX_CODE_TEST
-  if (tx_byte_pool_create(&nx_app_byte_pool, "Nx App memory pool", nx_byte_pool_buffer, NX_APP_MEM_POOL_SIZE) != TX_SUCCESS)
-  {
-    /* USER CODE BEGIN NX_Byte_Pool_Error */
-
-    /* USER CODE END NX_Byte_Pool_Error */
-  }
-  else
-  {
-    /* USER CODE BEGIN TX_Byte_Pool_Success */
-
-    /* USER CODE END TX_Byte_Pool_Success */
-    memory_ptr = (VOID *)&nx_app_byte_pool;
-
-    if (App_NetXDuo_Init(memory_ptr) != NX_SUCCESS)
-    {
-      /* USER CODE BEGIN  App_NetXDuo_Init_Error */
-
-      /* USER CODE END  App_NetXDuo_Init_Error */
-    }
-    /* USER CODE BEGIN  App_NetXDuo_Init_Success */
-
-    /* USER CODE END App_NetXDuo_Init_Success */
-
-  }
-#endif // NX_CODE_TEST
 
 #ifdef FX_TEST_CODE
   if (tx_byte_pool_create(&fx_app_byte_pool, "Fx App memory pool", fx_byte_pool_buffer, FX_APP_MEM_POOL_SIZE) != TX_SUCCESS)
@@ -277,38 +223,6 @@ UINT app_tx_get_byte_pool(TX_BYTE_POOL** pool_ptr)
     else
     {
         *pool_ptr = &tx_app_byte_pool;
-    }
-
-    return status;
-}
-
-/**
-  * @brief  function returning a pointer to the NetXDuo memory byte pool
-  * @param  Pointer to store NetXDuo memory byte pool
-  * @retval Operation get status
-  *
-  * @note   The pool must have been created before calling this function
-  */
-UINT app_nx_get_byte_pool(TX_BYTE_POOL** pool_ptr)
-{
-    /* Default status to success.  */
-    UINT status =  TX_SUCCESS;
-
-    /* Check for an invalid byte pool pointer.  */
-    if (pool_ptr == TX_NULL)
-    {
-        /* Null destination pointer, return appropriate error.  */
-        status =  TX_PTR_ERROR;
-    }
-    /* Now check for invalid pool ID.  */
-    else if (nx_app_byte_pool.tx_byte_pool_id != TX_BYTE_POOL_ID)
-    {
-        /* Byte pool pointer is invalid, return appropriate error code.  */
-        status =  TX_POOL_ERROR;
-    }
-    else
-    {
-        *pool_ptr = &nx_app_byte_pool;
     }
 
     return status;

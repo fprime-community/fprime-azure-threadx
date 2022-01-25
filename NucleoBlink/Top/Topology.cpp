@@ -3,7 +3,7 @@
 #include <Os/Log.hpp>
 #include <Os/File.hpp>
 #include <Fw/Types/MallocAllocator.hpp>
-#include "../../NucleoBlink/Top/Components.hpp"
+#include <NucleoBlink/Top/ArduinoSchedContexts.hpp>
 #include "NucleoSchedContexts.hpp"
 
 // Setup the rate group driver used to drive all the ActiveRateGroups connected to it.

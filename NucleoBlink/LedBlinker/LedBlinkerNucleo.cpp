@@ -7,7 +7,7 @@
 
 #include "Fw/Types/BasicTypes.hpp"
 
-#include <Arduino.h>
+#include <Arduino.h> // TODO: Replace by STM32 equivalent
 
 #include "../../NucleoBlink/LedBlinker/LedBlinker.hpp"
 namespace Nucleo {

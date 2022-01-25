@@ -20,7 +20,7 @@ void constructApp();
 #include <Svc/AssertFatalAdapter/AssertFatalAdapterComponentImpl.hpp>
 #include <Svc/FatalHandler/FatalHandlerComponentImpl.hpp>
 
-#include "../../NucleoBlink/LedBlinker/LedBlinker.hpp"
+#include <NucleoBlink/LedBlinker/LedBlinker.hpp>
 #include <fprime-nucleo/NucleoDrv/HardwareRateDriver/HardwareRateDriver.hpp>
 #include <fprime-nucleo/NucleoDrv/SerialDriver/SerialDriver.hpp>
 #include <fprime-nucleo/NucleoTime/NucleoTimeImpl.hpp>

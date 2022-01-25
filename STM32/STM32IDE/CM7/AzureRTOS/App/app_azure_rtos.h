@@ -31,12 +31,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "app_azure_rtos_config.h"
 
-#include "app_threadx.h"
-
-#include "app_netxduo.h"
-
-#include "app_fprime.h"
-
 #include "app_filex.h"
 
 /* Private includes ----------------------------------------------------------*/

@@ -5,10 +5,10 @@
 // ====================================================================== 
 
 
+#include <NucleoBlink/LedBlinker/LedBlinker.hpp>
 #include "Fw/Types/BasicTypes.hpp"
 
 #include <stdio.h>
-#include "../../NucleoBlink/LedBlinker/LedBlinker.hpp"
 
 namespace Nucleo {
   void LedBlinkerComponentImpl ::

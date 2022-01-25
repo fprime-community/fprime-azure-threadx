@@ -35,3 +35,10 @@ add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LedBlinker")
 # Add Topology subdirectory
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top")
 
+# Set the dummy file and MOD_DEPS "Os" to be able to register the deployment.
+# Note: Unfortunatelly not able to foresee the effects of adding the "Os" dependency here... 
+set(SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/dummy_empty_file.cpp")
+set(MOD_DEPS Os)
+
+register_fprime_deployment()
+

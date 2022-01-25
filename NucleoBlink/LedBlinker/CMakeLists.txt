@@ -17,8 +17,3 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")
     list(APPEND SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/LedBlinkerNucleo.cpp")
 endif()
 register_fprime_module()
-## # Add Teensyduino dependency
-## if(${CMAKE_SYSTEM_NAME} STREQUAL "Teensyduino")
-##     get_module_name(${CMAKE_CURRENT_LIST_DIR})
-##     add_arduino_dependency("${MODULE_NAME}")
-## endif()

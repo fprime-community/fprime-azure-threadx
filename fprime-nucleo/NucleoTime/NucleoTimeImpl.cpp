@@ -10,7 +10,7 @@
  */
 #include <fprime-nucleo/NucleoTime/NucleoTimeImpl.hpp>
 #include <Fw/Time/Time.hpp>
-#include <Arduino.h>
+#include <Arduino.h> //TODO: replace by STM32 equivalent
 
 namespace Svc {
 

@@ -5,7 +5,7 @@
 // ====================================================================== 
 
 
-#include "../../NucleoBlink/LedBlinker/LedBlinker.hpp"
+#include <NucleoBlink/LedBlinker/LedBlinker.hpp>
 
 #include "Fw/Types/BasicTypes.hpp"
 

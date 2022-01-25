@@ -12,6 +12,10 @@
 #ifndef _FW_CONFIG_HPP_
 #define _FW_CONFIG_HPP_
 
+#ifdef TGT_OS_TYPE_THREADX
+#include "fx_api.h"
+#endif
+
 // To enable various facilities, set the below to 0 or 1. If it is set in compiler flags,
 // these defaults will be overridden
 

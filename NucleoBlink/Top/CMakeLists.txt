@@ -20,9 +20,3 @@ set(MOD_DEPS
   fprime-nucleo/NucleoOs
   Os
 )
-## # Register the standard elf build as another target
-## register_fprime_executable("${PROJECT_NAME}_exe")
-## if(${CMAKE_SYSTEM_NAME} STREQUAL "Teensyduino")
-##     add_arduino_dependency("${PROJECT_NAME}_exe")
-## endif()
-## add_custom_target("${PROJECT_NAME}" DEPENDS "${PROJECT_NAME}_exe_hex")
