@@ -38,8 +38,8 @@ set(SOURCE_FILES
 )
 
 set_property(SOURCE
-                 ${CMAKE_CURRENT_LIST_DIR}/Core/Src/tx_initialize_low_level.s 
-                 ${CMAKE_CURRENT_LIST_DIR}/Core/Startup/startup_stm32h745zitx.s
+                 ${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/tx_initialize_low_level.s 
+                 ${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Startup/startup_stm32h745zitx.s
              PROPERTY LANGUAGE C)
 
 # Step 2: call `register_fprime_module` or `register_fprime_executable`
