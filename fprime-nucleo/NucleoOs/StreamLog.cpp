@@ -17,9 +17,21 @@ extern "C" {
     #include <string.h>
 }
 
+// TODO: (START) namespace for Arduino related code which needs to be replaced by STM32 equivalent
+namespace _ARDUINO_NS_ {
+
+size_t Stream::write(char* buffer, size_t size)
+{
+  (void)buffer;
+  (void)size;
+  return 0;
+}
+
+} // TODO: (END) namespace for Arduino related code which needs to be replaced by STM32 equivalent
+
 namespace Os {
-    Stream* A_STREAM = NULL; // I love it when a plan comes together.
-    void setNucleoStreamLogHandler(Stream* stream) {
+    _ARDUINO_NS_::Stream* A_STREAM = NULL; // I love it when a plan comes together.
+    void setNucleoStreamLogHandler(_ARDUINO_NS_::Stream* stream) {
         A_STREAM = stream;
     }
     /**

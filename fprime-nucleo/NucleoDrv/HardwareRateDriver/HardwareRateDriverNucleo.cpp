@@ -1,7 +1,7 @@
 #include <Fw/Types/BasicTypes.hpp>
 #include <Fw/Types/Assert.hpp>
 #include <fprime-nucleo/NucleoDrv/HardwareRateDriver/HardwareRateDriver.hpp>
-#include <Arduino.h>
+//TODO: #include <Arduino.h> replace by STM32 equivalent
 
 namespace Nucleo {
 IntervalTimer s_itimer;

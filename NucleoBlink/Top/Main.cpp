@@ -3,7 +3,7 @@
 #include <Os/Log.hpp>
 #ifdef NUCLEO
     #include <fprime-nucleo/NucleoOs/StreamLog.hpp>
-    #include <Arduino.h>
+//TODO: #include <Arduino.h> replace by STM32 equivalent
 #else
     #include <fprime-nucleo/NucleoDrv/SerialDriver/SerialDriver.hpp>
 #endif

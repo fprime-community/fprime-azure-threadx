@@ -1,7 +1,14 @@
 #include <stdint.h>
 #include <tx_port.h>
+
 #define NAME_MAX 255
-typedef int TaskIdRepr;
 #define FPRIME_OVERRIDE_NATIVE_TYPES
+
+typedef int TaskIdRepr;
 typedef int32_t NATIVE_INT_TYPE;
 typedef uint32_t NATIVE_UINT_TYPE;
+
+#ifdef TGT_OS_TYPE_THREADX
+NATIVE_INT_TYPE strnlen(const char *s, NATIVE_INT_TYPE maxlen);
+#endif
+

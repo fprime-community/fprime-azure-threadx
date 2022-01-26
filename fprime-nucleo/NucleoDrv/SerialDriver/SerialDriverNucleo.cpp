@@ -7,7 +7,7 @@
 
 #include <fprime-nucleo/NucleoDrv/SerialDriver/SerialDriver.hpp>
 #include "Fw/Types/BasicTypes.hpp"
-#include <Arduino.h>
+//TODO: #include <Arduino.h> replace by STM32 equivalent
 #include <Os/Log.hpp>
 
 namespace Nucleo {

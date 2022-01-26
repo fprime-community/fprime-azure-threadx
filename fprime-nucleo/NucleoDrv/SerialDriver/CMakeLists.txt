@@ -14,11 +14,6 @@ if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")
     list(APPEND SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/SerialDriverLinux.cpp")
 # Nucleo-ThreadX additions
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")
-    list(APPEND SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/SerialDriverArduino.cpp")
+    list(APPEND SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/SerialDriverNucleo.cpp")
 endif()
 register_fprime_module()
-## # Add Teensyduino dependency
-## if(${CMAKE_SYSTEM_NAME} STREQUAL "Teensyduino")
-##     get_module_name(${CMAKE_CURRENT_LIST_DIR})
-##     add_arduino_dependency("${MODULE_NAME}")
-## endif()

@@ -43,6 +43,8 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")
         # From this package: an interval timer and a stream-log timer
         "${CMAKE_CURRENT_LIST_DIR}/IntervalTimer.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/StreamLog.cpp"
+        # From this package: Utils including strnlen
+        "${CMAKE_CURRENT_LIST_DIR}/Utils.cpp"
     )
     register_fprime_module()
 endif()

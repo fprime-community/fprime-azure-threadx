@@ -4,6 +4,7 @@
 #include <Os/File.hpp>
 #include <Fw/Types/Assert.hpp>
 
+#include "fx_api.h"
 #include "app_filex.h"
 
 #include <stdio.h> // Needed for rename
@@ -186,7 +187,7 @@ namespace Os {
         } // end removeDirectory
 
         Status readDirectory(const char* path, const U32 maxNum,
-                             Fw::EightyCharString fileArray[],
+                             Fw::String fileArray[],
                              U32& numFiles)
         {
             FW_ASSERT(fileArray != NULL);
@@ -247,7 +248,7 @@ namespace Os {
                                       static_cast<NATIVE_INT_TYPE>(arrayIdx),
                                       static_cast<NATIVE_INT_TYPE>(maxNum));
 
-                            Fw::EightyCharString str(entryName);
+                            Fw::String str(entryName);
                             fileArray[arrayIdx++] = str;
 
                             DEBUG_PRINT("Entry \"%s\" is a file\n", entryName);
