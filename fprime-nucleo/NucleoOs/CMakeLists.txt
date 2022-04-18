@@ -1,7 +1,7 @@
 ####
 # ThreadX OS CMakeLists.txt:
 #
-# SOURCE_FILES: combined list of source and autocoding diles
+# SOURCE_FILES: combined list of source and autocoding files
 # MOD_DEPS: (optional) module dependencies
 #
 ####
@@ -10,6 +10,7 @@ cmake_policy(SET CMP0079 NEW)
 
 # Basic module dependencies
 set(MOD_DEPS
+        "${CMAKE_THREAD_LIBS_INIT}"
         Fw/Cfg
         Fw/Types
         Fw/Logger
@@ -63,6 +64,7 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")
     target_link_libraries(Os PRIVATE fprime-nucleo_NucleoOs)
     target_link_libraries(fprime-nucleo_NucleoOs PRIVATE Os)
 endif()
+
 
 
 

@@ -8,23 +8,23 @@
 ####
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")
   set(SOURCE_FILES
-      "${CMAKE_CURRENT_LIST_DIR}/NucleoTimeImpl.cpp")
+      "${FPRIME_FRAMEWORK_PATH}/Svc/Time/Time.fpp"
+      "${CMAKE_CURRENT_LIST_DIR}/NucleoTimeImpl.cpp"
+      )
 else()
   set(SOURCE_FILES
-      "${CMAKE_CURRENT_LIST_DIR}/LinuxTimeImpl.cpp")
+      "${FPRIME_FRAMEWORK_PATH}/Svc/Time/Time.fpp"
+      "${CMAKE_CURRENT_LIST_DIR}/LinuxTimeImpl.cpp"
+      )
 endif()
 set(MOD_DEPS
   Svc/Time
 )
 register_fprime_module()
-## # Add Teensyduino dependency
-## if(${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")
-##     get_module_name(${CMAKE_CURRENT_LIST_DIR})
-##     add_arduino_dependency("${MODULE_NAME}")
-## endif()
+
 ### UTs ###
 set(UT_SOURCE_FILES
-  "${FPRIME_FRAMEWORK_PATH}/Svc/Time/TimeComponentAi.xml"
+  "${FPRIME_FRAMEWORK_PATH}/Svc/Time/Time.fpp"
   "${CMAKE_CURRENT_LIST_DIR}/test/ut/Tester.cpp"
   "${CMAKE_CURRENT_LIST_DIR}/test/ut/Main.cpp"
 )

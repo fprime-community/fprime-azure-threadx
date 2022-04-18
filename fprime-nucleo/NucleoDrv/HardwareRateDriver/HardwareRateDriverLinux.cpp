@@ -2,29 +2,29 @@
 #include <Fw/Types/Assert.hpp>
 #include <Os/Task.hpp>
 #include <Fw/Types/EightyCharString.hpp>
-#include <fprime-nucleo/NucleoDrv/HardwareRateDriver/HardwareRateDriver.hpp>
 #include <sys/time.h>
+#include "HardwareRateDriverComponentImpl.hpp"
 
 namespace Nucleo {
 Os::Task s_task;
 //Temporary function used to time for linux
 void linux_task_function(void* vself) {
-    HardwareRateDriver* self = reinterpret_cast<HardwareRateDriver*>(vself);
+    HardwareRateDriverComponentImpl* self = reinterpret_cast<HardwareRateDriverComponentImpl*>(vself);
     struct timeval time;
     gettimeofday(&time, NULL);
     U64 time_us = time.tv_sec * (int)1e6 + time.tv_usec;
     if ((time_us % (self->m_interval * 1000)) == 0) {
-        HardwareRateDriver::s_timer(self);
+        HardwareRateDriverComponentImpl::s_timer(self);
     }
 }
 
-void HardwareRateDriver::start() {
+void HardwareRateDriverComponentImpl::start() {
     Fw::EightyCharString fake("FakeNucleo");
     s_task.setStarted(true);
     s_task.start(fake, 0xdeafbeef, 255, 0, linux_task_function, this, 0);
 }
-void HardwareRateDriver::stop() {
+void HardwareRateDriverComponentImpl::stop() {
     s_task.setStarted(false);
 }
-void HardwareRateDriver::s_timerISR() {}
+void HardwareRateDriverComponentImpl::s_timerISR(void* param) {}
 };

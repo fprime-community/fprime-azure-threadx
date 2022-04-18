@@ -6,8 +6,8 @@
 #
 ####
 set(SOURCE_FILES
-  "${CMAKE_CURRENT_LIST_DIR}/SerialDriverComponentAi.xml"
-  "${CMAKE_CURRENT_LIST_DIR}/SerialDriver.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SerialDriver.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SerialDriverComponentImpl.cpp"
 )
 # Check the Linux build
 if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")

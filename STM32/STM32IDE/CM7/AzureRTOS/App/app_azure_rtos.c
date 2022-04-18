@@ -92,10 +92,11 @@ VOID tx_application_define(VOID *first_unused_memory)
       /* USER CODE BEGIN  App_ThreadX_Init_Success */
 
       /* USER CODE END  App_ThreadX_Init_Success */
-#ifdef UT_FPRIME
+
     // FileX initialisation
     fx_system_initialize();
 
+#ifdef UT_FPRIME
     if (App_FPrime_Init(memory_ptr) != TX_SUCCESS)
     {
           /* USER CODE BEGIN  App_FPrime_Init_Error */

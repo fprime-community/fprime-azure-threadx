@@ -40,17 +40,18 @@
 
 extern "C" {
   void startTestTask(int iters);
-  void qtest_block_receive(void);
-  void qtest_nonblock_receive(void);
-  void qtest_nonblock_send(void);
-  void qtest_block_send(void);
-  void qtest_performance(void);
-  void qtest_concurrent(void);
-  void intervalTimerTest(void);
+  void qtest_block_receive();
+  void qtest_nonblock_receive();
+  void qtest_nonblock_send();
+  void qtest_block_send();
+  void qtest_performance();
+  void qtest_concurrent();
+  void intervalTimerTest();
   void watchdogTest();
-  void fileSystemTest(void);
-  void validateFileTest(void);
+  void fileSystemTest();
+  void validateFileTest(const char* filename);
 }
+const char* filename = "some_test_file.txt";
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -117,7 +118,7 @@ void run_test(int test_num)
             fileSystemTest();
             break;
         case 9:
-            validateFileTest();
+            validateFileTest(filename);
             break;
         case 10:
            watchdogTest();

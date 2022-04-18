@@ -7,18 +7,18 @@ set(SOURCE_FILES
   #
   # Core
   #
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/eth.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/gpio.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/stm32ide_main.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/rtc.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/stm32h7xx_hal_msp.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/stm32h7xx_hal_timebase_tim.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/stm32h7xx_it.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/syscalls.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/sysmem.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/tim.c"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/tx_initialize_low_level.s"
-  "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/usart.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/dma.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/gpio.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/rtc.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/stm32h7xx_hal_msp.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/stm32h7xx_hal_timebase_tim.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/stm32h7xx_it.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/stm32ide_main.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/syscalls.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/sysmem.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/tim.c"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/tx_initialize_low_level.s"
+ "${CMAKE_CURRENT_LIST_DIR}/CM7/Core/Src/usart.c"
   #
   # Core/Startup
   #
@@ -31,6 +31,10 @@ set(SOURCE_FILES
   # Middlewares-Interfaces: FileSystem-FileXInternalRAMInterface
   #
   "${CMAKE_CURRENT_LIST_DIR}/CM7/Middlewares/Interfaces/FileSystem/FileXInternalRAMInterface/fx_stm32_sram_driver.c"
+  #
+  # Middlewares-lwrb: lwrb
+  #
+  "${CMAKE_CURRENT_LIST_DIR}/CM7/Middlewares/lwrb/src/lwrb/lwrb.c"  
   #
   # Common
   #

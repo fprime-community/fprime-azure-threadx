@@ -5,11 +5,11 @@
 // ====================================================================== 
 
 
-#include <fprime-nucleo/NucleoDrv/SerialDriver/SerialDriver.hpp>
 #include "Fw/Types/BasicTypes.hpp"
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "SerialDriverComponentImpl.hpp"
 
 #define SERIAL_FILE_LINUX_TMPL "/dev/pts/%d"
 

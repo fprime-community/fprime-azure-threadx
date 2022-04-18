@@ -14,7 +14,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "tx_api.h"
-#include "../../Core/Inc/stm32ide_main.h"
+#include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */

@@ -39,21 +39,26 @@ set(CMAKE_CXX_ARCHIVE_FINISH "${CMAKE_C_ARCHIVE_FINISH}")
 set(CMAKE_C_COMPILER_WORKS 1)
 set(CMAKE_CXX_COMPILER_WORKS 1)
 set(CMAKE_ASM_COMPILER_WORKS 1)
-set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY" CACHE STRING "Try Static Lib Type" FORCE)
 
 # MCU and VFP flags
 set(MCPU_FLAGS "-mthumb -mcpu=cortex-m7")
 set(VFP_FLAGS "-mfpu=fpv5-d16 -mfloat-abi=hard")
 
 # Toolchain preprocessor definitions
-set(TOOL_PREC_DEFS "-DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H745xx")
+set(COMPILER_P_PROC_DEFS "-DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H745xx -DUSE_FULL_LL_DRIVER")
 # Application preprocessor definitions
 set(APP_PREC_DEFS "-DTX_INCLUDE_USER_DEFINE_FILE -DFX_INCLUDE_USER_DEFINE_FILE")
 
-#set(COMPILER_COMMON_FLAGS "${TOOL_PREC_DEFS} ${APP_PREC_DEFS} --specs=nano.specs -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin -fshort-enums -Werror -Wall -Wextra -Wuninitialized -Wdouble-promotion -Wno-unused-parameter -fno-builtin -fstrength-reduce")
-set(COMPILER_COMMON_FLAGS "${TOOL_PREC_DEFS} ${APP_PREC_DEFS} --specs=nano.specs -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin -fshort-enums -Wall -Wextra -Wuninitialized -Wdouble-promotion -Wno-unused-parameter -fno-builtin -fstrength-reduce")
-set(CMAKE_C_FLAGS   "${MCPU_FLAGS} ${VFP_FLAGS} ${COMPILER_COMMON_FLAGS} -std=gnu11 -Wno-long-long -Wconversion -Wno-sign-conversion -pedantic -Werror-implicit-function-declaration -Wstrict-prototypes -fno-cond-mismatch -Werror-implicit-function-declaration -Wstrict-prototypes -fstack-usage -mlong-calls")
-set(CMAKE_CXX_FLAGS "${MCPU_FLAGS} ${VFP_FLAGS} ${COMPILER_COMMON_FLAGS} -c -std=gnu++14  -fno-rtti -fno-use-cxa-atexit -fno-exceptions -fstack-usage -mlong-calls")
+# Reference flags
+#set(COMPILER_COMMON_FLAGS "${COMPILER_P_PROC_DEFS} ${APP_PREC_DEFS} --specs=nano.specs -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin -fshort-enums -Werror -Wall -Wextra -Wuninitialized -Wdouble-promotion -Wno-unused-parameter -fno-builtin -fstrength-reduce")
+#   set(COMPILER_COMMON_FLAGS "${COMPILER_P_PROC_DEFS} ${APP_PREC_DEFS} --specs=nano.specs -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin -fshort-enums -Wall -Wextra -Wuninitialized -Wdouble-promotion -Wno-unused-parameter -fno-builtin -fstrength-reduce")
+#   set(CMAKE_C_FLAGS   "${MCPU_FLAGS} ${VFP_FLAGS} ${COMPILER_COMMON_FLAGS} -std=gnu11 -Wno-long-long -Wconversion -Wno-sign-conversion -pedantic -Werror-implicit-function-declaration -Wstrict-prototypes -fno-cond-mismatch -Werror-implicit-function-declaration -Wstrict-prototypes -fstack-usage -mlong-calls")
+#   set(CMAKE_CXX_FLAGS "${MCPU_FLAGS} ${VFP_FLAGS} ${COMPILER_COMMON_FLAGS} -c -std=gnu++14  -fno-rtti -fno-use-cxa-atexit -fno-exceptions -fstack-usage -mlong-calls")
+
+set(COMPILER_COMMON_FLAGS "${COMPILER_P_PROC_DEFS} ${APP_PREC_DEFS} --specs=nano.specs -Wall -fdata-sections -ffunction-sections")
+set(CMAKE_C_FLAGS   "${MCPU_FLAGS} ${VFP_FLAGS} ${COMPILER_COMMON_FLAGS} -std=gnu11 ")
+set(CMAKE_CXX_FLAGS "${MCPU_FLAGS} ${VFP_FLAGS} ${COMPILER_COMMON_FLAGS} -c -std=gnu++14 -fno-rtti")
 set(CMAKE_ASM_FLAGS "${MCPU_FLAGS} ${VFP_FLAGS} -c -x assembler-with-cpp")
 set(CMAKE_EXE_LINKER_FLAGS "${MCPU_FLAGS} -T${LINKER_SCRIPT} --specs=nosys.specs -Wl,-Map=FPrime.map -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--gc-sections,-print-memory-usage -Wl,--end-group")
 

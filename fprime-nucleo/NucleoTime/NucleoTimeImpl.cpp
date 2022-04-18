@@ -10,7 +10,7 @@
  */
 #include <fprime-nucleo/NucleoTime/NucleoTimeImpl.hpp>
 #include <Fw/Time/Time.hpp>
-//TODO: #include <Arduino.h> replace by STM32 equivalent
+#include "tim.h"
 
 namespace Svc {
 
@@ -21,8 +21,8 @@ namespace Svc {
         NATIVE_INT_TYPE portNum, /*!< The port number*/
         Fw::Time &time /*!< The time to set */
     ) {
-        U32 msec = millis();
-        U32 usec = micros();
+        U32 msec = HAL_GetTick();
+        U32 usec = __HAL_TIM_GET_COUNTER(&htim2);
         time.set(msec/1000, usec);
     }
 

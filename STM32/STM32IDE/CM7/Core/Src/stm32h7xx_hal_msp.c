@@ -20,7 +20,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "../Inc/stm32ide_main.h"
+#include "stm32ide_main.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */

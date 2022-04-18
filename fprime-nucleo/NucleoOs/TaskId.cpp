@@ -5,6 +5,7 @@
 //
 // ThreadX implementation of the TaskId class.
 
+#include <StandardTypes.hpp>
 #include <Os/TaskId.hpp>
 
 namespace Os

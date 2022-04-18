@@ -6,8 +6,8 @@
 #
 ####
 set(SOURCE_FILES
-  "${CMAKE_CURRENT_LIST_DIR}/HardwareRateDriverComponentAi.xml"
-  "${CMAKE_CURRENT_LIST_DIR}/HardwareRateDriver.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/HardwareRateDriver.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/HardwareRateDriverComponentImpl.cpp"
 )
 # Check the Linux build
 if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Nucleo-ThreadX")

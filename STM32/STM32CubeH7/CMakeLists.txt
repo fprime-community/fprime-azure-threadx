@@ -3,7 +3,6 @@ set(SOURCE_FILES
   #
   # Drivers/BSP
   #
-  "${CMAKE_CURRENT_LIST_DIR}/Drivers/BSP/Components/lan8742/lan8742.c"
   "${CMAKE_CURRENT_LIST_DIR}/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c"
   
   #
@@ -110,11 +109,11 @@ set(SOURCE_FILES
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_dac.c"                     
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_delayblock.c"                       
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_dma2d.c"                        
-  #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_dma.c"                        
-  #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_exti.c"                          
+  "${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_dma.c"                        
+  "${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_exti.c"                          
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_fmac.c"                          
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_fmc.c"                      
-  #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_gpio.c"                          
+  "${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_gpio.c"                          
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_hrtim.c"                        
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_i2c.c"                       
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_lptim.c"                        
@@ -122,16 +121,16 @@ set(SOURCE_FILES
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_mdma.c"                         
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_opamp.c"                       
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_pwr.c"                           
-  #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_rcc.c"                           
+  "${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_rcc.c"                           
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_rng.c"                           
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_rtc.c"                           
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_sdmmc.c"                       
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_spi.c"                           
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_swpmi.c"                       
   #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_tim.c"                           
-  #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usart.c"                       
-  #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c"                           
-  #"${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_utils.c"
+  "${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usart.c"                       
+  "${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c"                           
+  "${CMAKE_CURRENT_LIST_DIR}/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_utils.c"
   
 )
 

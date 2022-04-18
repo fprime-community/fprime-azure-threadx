@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32ide_main.h"
+#include "dma.h"
 #include "rtc.h"
 #include "tim.h"
 #include "usart.h"
@@ -37,11 +38,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#if defined ( __GNUC__) && !defined(__clang__)
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif
 
 #ifndef HSEM_ID_0
 #define HSEM_ID_0 (0U) /* HW semaphore 0*/
@@ -91,7 +87,7 @@ int stm32ide_main(void)
   SCB_EnableICache();
 
   /* Enable D-Cache---------------------------------------------------------*/
-  SCB_EnableDCache();
+//  SCB_EnableDCache();
 
 /* USER CODE BEGIN Boot_Mode_Sequence_1 */
   /* Wait until CPU2 boots and enters in stop mode or timeout*/
@@ -99,7 +95,7 @@ int stm32ide_main(void)
   while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) && (timeout-- > 0));
   if ( timeout < 0 )
   {
-  Error_Handler();
+    Error_Handler();
   }
 /* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
@@ -138,14 +134,16 @@ int stm32ide_main(void)
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
+  BSP_LED_Init(LED_GREEN);
   BSP_LED_Init(LED_YELLOW);
   BSP_LED_Init(LED_RED);
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-//  MX_ETH_Init();
   MX_USART3_UART_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
+  MX_USART6_UART_Init();
   MX_RTC_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
@@ -220,19 +218,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-  /**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-PUTCHAR_PROTOTYPE
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
-
-  return ch;
-}
 /* USER CODE END 4 */
 
 /* MPU Configuration */
@@ -261,6 +246,7 @@ void MPU_Config(void)
   /** Initializes and configures the Region and the memory to be protected
   */
   MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+  MPU_InitStruct.BaseAddress = 0x30040000;
   MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
   MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
   MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
@@ -300,11 +286,11 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  BSP_LED_Off(LED_YELLOW);
+  __disable_irq();
   while (1)
   {
      BSP_LED_Toggle(LED_RED);
-     tx_thread_sleep(20);
+     HAL_Delay(200);
   }
   /* USER CODE END Error_Handler_Debug */
 }

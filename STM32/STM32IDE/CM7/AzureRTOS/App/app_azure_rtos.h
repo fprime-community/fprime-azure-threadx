@@ -56,7 +56,6 @@ extern "C" {
 /* Exported functions prototypes ---------------------------------------------*/
 void MX_AZURE_RTOS_Init(void);
 UINT app_tx_get_byte_pool(TX_BYTE_POOL** pool_ptr);
-UINT app_nx_get_byte_pool(TX_BYTE_POOL** pool_ptr);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

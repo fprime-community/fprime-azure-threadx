@@ -1,24 +1,30 @@
 #include <Fw/Types/BasicTypes.hpp>
 #include <Fw/Types/Assert.hpp>
-#include <fprime-nucleo/NucleoDrv/HardwareRateDriver/HardwareRateDriver.hpp>
-//TODO: #include <Arduino.h> replace by STM32 equivalent
+#include "HardwareRateDriverComponentImpl.hpp"
+
+// TODO: For now use a software timer. If more accuracy is required then an HW timer must be used
+#include <Os/WatchdogTimer.hpp>
 
 namespace Nucleo {
-IntervalTimer s_itimer;
 
-void HardwareRateDriver::start() {
-    bool ok = s_itimer.begin(HardwareRateDriver::s_timerISR, m_interval * 1000);
-    if (!ok) {
-        digitalWrite(13, HIGH);
-    }
-}
+  // TODO: For now use a software timer. If more accuracy is required then an HW timer must be used
+  static Os::WatchdogTimer s_itimer;
 
-void HardwareRateDriver::stop() {
-    s_itimer.end();
-}
+  void HardwareRateDriverComponentImpl::start() {
+      Os::WatchdogTimer::WatchdogStatus status = s_itimer.startMs(m_interval, HardwareRateDriverComponentImpl::s_timerISR, nullptr);
+      if (status != Os::WatchdogTimer::WatchdogStatus::WATCHDOG_OK) {
+    	  //TODO: Blink red LED
+      }
+  }
 
-void HardwareRateDriver::s_timerISR() {
-    s_timer(s_driver);
-}
+  void HardwareRateDriverComponentImpl::stop() {
+	  // TODO: For now use a software timer. If more accuracy is required then an HW timer must be used
+      s_itimer.cancel();
+  }
+
+  void HardwareRateDriverComponentImpl::s_timerISR(void* param) {
+      s_timer(s_driver);
+      s_itimer.restart();
+  }
 
 };
