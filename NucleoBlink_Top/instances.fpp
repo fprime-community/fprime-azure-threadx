@@ -126,11 +126,14 @@ module Nucleo {
 
   }
   
-  instance groundInterface: Svc.GroundInterface base id 1800 \
-  {
+  instance uplink: Svc.Deframer base id 1800 {
 
-    phase Fpp.ToCpp.Phases.instances """
-    Svc::GroundInterface groundInterface(FW_OPTIONAL_NAME("groundInterface"));
+    phase Fpp.ToCpp.Phases.configObjects """
+    Svc::FprimeDeframing deframing;
+    """
+
+    phase Fpp.ToCpp.Phases.configComponents """
+    uplink.setup(ConfigObjects::uplink::deframing);
     """
 
   }
@@ -179,5 +182,18 @@ module Nucleo {
     """
 
   }
+  
+  instance downlink: Svc.Framer base id 0x4100 {
+
+    phase Fpp.ToCpp.Phases.configObjects """
+    Svc::FprimeFraming framing;
+    """
+
+    phase Fpp.ToCpp.Phases.configComponents """
+    downlink.setup(ConfigObjects::downlink::framing);
+    """
+
+  }
+
 
 }

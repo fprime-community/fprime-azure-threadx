@@ -11,8 +11,9 @@ module Nucleo {
     instance chanTlm
     instance cmdDisp
     instance comm
+    instance downlink
+    instance uplink
     instance eventLogger
-    instance groundInterface
     instance hardwareRateDriver
     instance ledBlinker
     instance rateGroupDriverComp
@@ -30,8 +31,6 @@ module Nucleo {
     health connections instance $health
 
     telemetry connections instance chanTlm
-
-    text event connections instance textLogger
 
     time connections instance nucleoTime
 
@@ -99,7 +98,7 @@ module Nucleo {
     
       # 10Hz Rate Group
       rateGroupDriverComp.CycleOut[0] -> rateGroup10HzComp.CycleIn[0]
-      rateGroup10HzComp.RateGroupMemberOut[0] -> groundInterface.schedIn[0]
+      rateGroup10HzComp.RateGroupMemberOut[0] -> uplink.schedIn[0]
       rateGroup10HzComp.RateGroupMemberOut[1] -> ledBlinker.schedIn[0]
       rateGroup10HzComp.RateGroupMemberOut[2] -> comm.schedIn[0]
     
@@ -129,11 +128,27 @@ module Nucleo {
 
     # Ground Interface Connections
     connections DownlinkConn {
-      groundInterface.uplinkPort[0] -> cmdDisp.seqCmdBuff[0]
-      eventLogger.PktSend[0] -> groundInterface.downlinkPort[0]
-      chanTlm.PktSend[0] -> groundInterface.downlinkPort[0]
-      groundInterface.write[0] -> comm.write[0]
-      groundInterface.readPoll[0] -> comm.readPoll[0]
+      groundInterface.uplinkPort[0] -> cmdDisp.seqCmdBuff[0]    ## DONE
+      eventLogger.PktSend[0] -> groundInterface.downlinkPort[0] ## DONE
+      chanTlm.PktSend[0] -> groundInterface.downlinkPort[0]     ## DONE
+      groundInterface.write[0] -> comm.write[0]                 ## TODO: Connect Svc::Deframer     output  to Nucleo.SerialDriver
+      groundInterface.readPoll[0] -> comm.readPoll[0]           ## TODO: Connect Svc::Deframer     output  to Nucleo.SerialDriver
+    }
+    
+    # Uplink (Deframer) connections
+    connections Uplink {
+      cmdDisp.seqCmdStatus -> uplink.cmdResponseIn[0]
+      uplink.comOut[0] -> cmdDisp.seqCmdBuff[0]
+      
+      ## Drv.Serial(UART) -> Deframer
+    }
+    
+    # Downlink (Framer) connections
+    connections Dowlink {
+      chanTlm.PktSend[0] -> downlink.comIn[0]
+      eventLogger.PktSend[0] -> downlink.comIn[0]
+      
+      ## Framer -> Drv.Serial(UART) 
     }
 
     # *** Fault Connectionss ***

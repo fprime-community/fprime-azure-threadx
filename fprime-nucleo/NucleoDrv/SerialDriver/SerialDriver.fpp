@@ -1,6 +1,6 @@
 module Nucleo {
 
-  @ An interrupt based driver for Nucleo rate groups.
+  @ An interrupt based driver for Nucleo.
   passive component SerialDriver {
   
     # ----------------------------------------------------------------------
